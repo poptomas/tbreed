@@ -59,7 +59,13 @@ if __name__ == "__main__":
     LIBRARIES = [
         "scikit-learn==1.3.1",
         "tqdm==4.66.1",
-        "pandas==2.1.1"
+        "pandas==2.1.1",
+        "pytextrank==3.2.5",
+        "spacy==3.7.0",
+        "pandas==2.1.2",
+        "sentence-transformers==2.2.2",
+        "gensim==4.3.2",
+        "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.0/en_core_web_md-3.7.0.tar.gz"
     ]
 
     # Create an instance of the PoetryProjectCreator class and run the automation

@@ -4,9 +4,6 @@ from sklearn.cluster import KMeans, DBSCAN
 import numpy as np
 from sklearn.manifold import TSNE
 import pandas as pd
-from bokeh.plotting import figure, show, output_notebook, output_file
-from bokeh.models import ColumnDataSource, HoverTool
-import bokeh.palettes
 import spacy
 import pytextrank
 import umap
@@ -42,23 +39,13 @@ class SentenceClusterAnalyzer:
         df['umap_x'] = self.umap_embeddings[:, 0]
         df['umap_y'] = self.umap_embeddings[:, 1]
         palette = bokeh.palettes.turbo(cluster_count)
-        df['color'] = [palette[i] for i in df['cluster_label']]
+        df['color'] = [palette[i] for i in df['cluster_label']] 
         source = ColumnDataSource(df)
 
         plot.circle('umap_x', 'umap_y', size=10, color='color', source=source)
 
-        hover = HoverTool()
-        hover.tooltips = [
-            ("Sentence", "@sentence"),
-            ("Cluster Name", "@cluster_name"),
-            ("Cluster", "@cluster_label")
-        ]
-        plot.add_tools(hover)
-
-        output_notebook()
-        output_file("visualization.html")
-
-        show(plot)
+        return source
+        
 
     def print_clusters(self):
         if self.cluster_labels is not None:

@@ -23,9 +23,9 @@ class Enron:
         """
         Downloads the Enron email dataset using requests library while displaying the progress bar
         """
-        request = requests.get(url, stream=True)
+        request = requests.get(url, stream=True, timeout=10)
         size = float(request.headers["content-length"])
-        progress_bar = tqdm(total=size, unit="iB", unit_scale=True, colour="red")
+        progress_bar = tqdm(total=size, unit="iB", unit_scale=True, colour="cyan")
         with open(self.tar_fname, "wb") as file:
             # in order to prevent loading everything in the memory at once
             for chunk in request.iter_content(chunk_size=chunk_size):
@@ -45,7 +45,7 @@ class Enron:
         for root, _, files in sorted(os.walk(self.dataset_dir)):
             for fname in sorted(files):
                 path = os.path.join(root, fname)
-                self.__add_record(path)
+                self._add_record(path)
 
     @benchmark
     def clean_up(self):
@@ -56,7 +56,7 @@ class Enron:
         os.remove(self.tar_fname)
         shutil.rmtree(self.dataset_dir)
 
-    def __add_record(self, path: str):
+    def _add_record(self, path: str):
         """
         add a row to a csv file with the structure:
         file       | message
