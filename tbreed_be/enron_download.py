@@ -19,10 +19,13 @@ class Enron:
         self.dataset_dir = ds_fname
 
     @benchmark
-    def download_dataset(self, url: str, chunk_size: int):
+    def download_dataset(self, url: str, chunk_size: int) -> None:
         """
         Downloads the Enron email dataset using requests library while displaying the progress bar
         """
+        if os.path.exists(self.dataset_dir):
+            shutil.rmtree(self.dataset_dir)
+        os.makedirs(self.dataset_dir)
         request = requests.get(url, stream=True, timeout=10)
         size = float(request.headers["content-length"])
         progress_bar = tqdm(total=size, unit="iB", unit_scale=True, colour="cyan")
@@ -33,11 +36,11 @@ class Enron:
                 file.write(chunk)
 
     @benchmark
-    def unzip_dataset(self):
+    def unzip_dataset(self) -> None:
         shutil.unpack_archive(self.tar_fname, ".")
 
     @benchmark
-    def build_csv(self):
+    def build_csv(self) -> None:
         """
         Form the csv file compliant with the kaggle Enron dataset
         - sorted order required
@@ -48,15 +51,16 @@ class Enron:
                 self._add_record(path)
 
     @benchmark
-    def clean_up(self):
+    def clean_up(self) -> None:
         """
         Enron unzipping and processing leaves behind large files
         from which the processing was made - no longer useful
         """
         os.remove(self.tar_fname)
         shutil.rmtree(self.dataset_dir)
+        
 
-    def _add_record(self, path: str):
+    def _add_record(self, path: str) -> None:
         """
         add a row to a csv file with the structure:
         file       | message
@@ -81,7 +85,7 @@ if __name__ == "__main__":
     csv_fname = "enron.csv"
     dataset_dir = "maildir"
     enron = Enron(tar_gz_fname, csv_fname, dataset_dir)
-    enron.download_dataset(url, chunk_size=1024)
+    e = enron.download_dataset(url, chunk_size=1024)
 
     enron.unzip_dataset()
     enron.build_csv()
