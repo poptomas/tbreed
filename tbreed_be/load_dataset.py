@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 import pandas as pd
-
+from utils import benchmark
 
 class Loader(ABC):
     @abstractmethod
@@ -9,7 +9,6 @@ class Loader(ABC):
 
 
 class CSVLoader(Loader):
-    def load_dataset(self, path: str, chunksize: int = 4096):
-        reader = pd.read_csv(path, chunksize)
-        for chunk in reader:
-            yield chunk
+    @benchmark
+    def load_dataset(self, path: str):
+        return pd.read_csv(path, engine="c")
